@@ -5,7 +5,7 @@ ShowUsage() {
     echo "Usage: $0 [VM name]"
 }
 
-sudo echo "vcpu v1.0.2"
+sudo echo "vcpu v1.0.3"
 
 if [ -z "$1" ]; then
     ShowUsage
@@ -17,7 +17,7 @@ MemSize=$(echo $VMsettings | cut -d '|' -f 1)
 CDfile=$(echo $VMsettings | cut -d '|' -f 2)
 BootFrom=$(echo $VMsettings | cut -d '|' -f 3)
 
-qemu-system-x86_64 -cpu qemu64 -m $MemSize -cdrom $CDfile -boot $BootFrom -hda /home/$(whoami)/vcpu/$1.vhd -smp 2
+qemu-system-x86_64 -cpu qemu64 -m $MemSize -cdrom $CDfile -boot $BootFrom -drive file=/home/$(whoami)/vcpu/$1.vhd,format=raw -smp 2
 
 if [[ "$BootFrom" != "c" ]]; then
     echo "Did you finish installing the OS? (y/n)"
