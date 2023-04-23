@@ -6,7 +6,7 @@ ShowUsage() {
   echo "mkvcpu also creates a VHD file, so don't worry."
 }
 
-sudo echo "mkvcpu v1.0.5"
+sudo echo "mkvcpu v1.0.6"
 
 if [ ! -d "/home/$(whoami)/vcpu" ]; then
   echo "VCPU folder does not exist! Creating one..."
@@ -29,7 +29,7 @@ if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
   mkvhd /home/$(whoami)/vcpu/$1.vhd $4 --silent
 
   echo "Done. Creating VM config..."
-  echo "$2|$(realpath $3)|d" > "/home/$(whoami)/vcpu/$1.vcpu"
+  echo "$2|$(realpath $3)|d|0" > "/home/$(whoami)/vcpu/$1.vcpu"
 
   echo "VM created!"
 elif [ "$answer" == "n" ] || [ "$answer" == "N" ]; then
