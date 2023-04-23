@@ -11,7 +11,7 @@ if [ -z "$1" ]; then
     exit 0
 fi
 if [ -f "/home/$(whoami)/vcpu/$1.vcpu" ]; then
-    echo "You are creating a VCPU VM with '$1'"
+    echo "You are deleting a VCPU VM with '$1'"
     echo "Do you want to continue? (y/n)"
     read answer
 else
