@@ -2,15 +2,27 @@
 set -e
 
 ShowUsage() {
-    echo "Usage: $0 [VM name]"
+    echo "Usage: $0 [VM name OR -list]"
+    echo
+    echo "Use -list to list VMs available"
 }
 
-sudo echo "vcpu v1.0.3"
+ListVMs() {
+    ls /home/$(whoami)/vcpu | grep .vcpu
+}
 
-if [ -z "$1" ]; then
+sudo echo "vcpu v1.0.4"
+
+if [ -z "$1" ] && [ "$1" != "-list" ]; then
     ShowUsage
     exit 0
 fi
+
+if [[ "$1" == "-list" ]]; then
+    ListVMs
+    exit 0
+fi
+
 
 VMsettings="$(cat /home/$(whoami)/vcpu/$1.vcpu)"
 MemSize=$(echo $VMsettings | cut -d '|' -f 1)
