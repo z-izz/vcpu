@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+ShowUsage() {
+	echo "Usage: $0 [VM name]"
+}
+
+sudo echo "rmvcpu v1.0.0"
+
+if [ -z "$1" ]; then
+    ShowUsage
+    exit 0
+fi
+if [ -f "/home/$(whoami)/vcpu/$1.vcpu" ]; then
+    echo "You are creating a VCPU VM with '$1'"
+    echo "Do you want to continue? (y/n)"
+    read answer
+else
+    echo "VCPU VM $1 doesn't exist!"
+    exit 0
+fi
+
+if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
+  echo "Alright. Deleting HDD..."
+  rm /home/$(whoami)/vcpu/$1.vhd
+
+  echo "Done. Deleting VM config..."
+  rm "/home/$(whoami)/vcpu/$1.vcpu"
+
+  echo "VM deleted!"
+elif [ "$answer" == "n" ] || [ "$answer" == "N" ]; then
+  echo "Okay."
+  exit 0
+else
+  echo "Invalid input. Please enter 'y' or 'n'."
+fi

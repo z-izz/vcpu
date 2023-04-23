@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+ShowUsage() {
+	echo "Usage: $0 [output file] [size in gb] [--silent option]"
+}
+
+CreateVHD() {
+  sudo dd if=/dev/zero of=$1 bs=1G count=$2 status=none
+}
+
+OwnVHD() {
+  sudo chown $(whoami) $1
+}
+
+sudo echo "mkvhd v1.0.9"
+
+if [ -z "$2" ] || [ -z "$1" ]; then
+    ShowUsage
+    exit 0
+fi
+
+if [[ "$3" == "--silent" ]]; then 
+  SilentMode="true"
+else
+  SilentMode="false"
+fi
+
+if [[ "$SilentMode" == "false" ]]; then 
+  echo "You are creating a VHD file called $1 with the size of $2 GB."
+  echo "Do you want to continue? (y/n)"
+  read answer 
+else
+  answer="y" 
+fi
+
+if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+  if [[ "$SilentMode" == "false" ]]; then
+    echo "Alright. Creating VHD..."
+    CreateVHD $1 $2
+    echo "VHD created!"
+    echo "Taking ownership of VHD..."
+    OwnVHD $1
+  elif [[ "$SilentMode" == "true" ]]; then
+    CreateVHD $1 $2
+    OwnVHD $1
+  fi
+elif [[ "$answer" == "n" || "$answer" == "N" ]]; then
+  echo "Okay."
+  exit 0
+else
+  echo "Invalid input. Please enter 'y' or 'n'."
+  exit 1
+fi

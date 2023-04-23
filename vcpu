@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+ShowUsage() {
+    echo "Usage: $0 [VM name]"
+}
+
+sudo echo "vcpu v1.0.1"
+
+if [ -z "$1" ]; then
+    ShowUsage
+    exit 0
+fi
+
+VMsettings="$(cat /home/$(whoami)/vcpu/$1.vcpu)"
+MemSize=$(echo $VMsettings | cut -d '|' -f 1)
+CDfile=$(echo $VMsettings | cut -d '|' -f 2)
+BootFrom=$(echo $VMsettings | cut -d '|' -f 3)
+
+qemu-system-x86_64 -cpu qemu64 -m $MemSize -cdrom $CDfile -boot $BootFrom -hda /home/$(whoami)/vcpu/$1.vhd -smp 2

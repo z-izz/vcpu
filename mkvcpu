@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+ShowUsage() {
+	echo "Usage: $0 [VM name] [Memory size in MB] [CDrom file] [HDD size in GB]"
+  echo
+  echo "mkvcpu also creates a VHD file, so don't worry."
+}
+
+sudo echo "mkvcpu v1.0.5"
+
+if [ ! -d "/home/$(whoami)/vcpu" ]; then
+  echo "VCPU folder does not exist! Creating one..."
+  mkdir "/home/$(whoami)/vcpu"
+fi
+
+
+# mkvcpu [vmname] [memorysize] [cdrom] [hddsize]
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+    ShowUsage
+    exit 0
+fi
+
+echo "You are creating a VCPU VM with '$1' as the name, memory size of $2 MB, '$(realpath $3)' as the CD/DVD, and new HDD file with the size of $4 GB."
+echo "Do you want to continue? (y/n)"
+read answer
+
+if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
+  echo "Alright. Creating HDD..."
+  mkvhd /home/$(whoami)/vcpu/$1.vhd $4 --silent
+
+  echo "Done. Creating VM config..."
+  echo "$2|$(realpath $3)|d" > "/home/$(whoami)/vcpu/$1.vcpu"
+
+  echo "VM created!"
+elif [ "$answer" == "n" ] || [ "$answer" == "N" ]; then
+  echo "Okay."
+  exit 0
+else
+  echo "Invalid input. Please enter 'y' or 'n'."
+fi
